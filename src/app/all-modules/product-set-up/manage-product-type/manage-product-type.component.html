@@ -1,0 +1,137 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header" style="margin-top: 30px">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="page-title">Product Types</h3>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/layout/dashboard/admin">Dashboard</a></li>
+          <li class="breadcrumb-item active">Manage Product Types</li>
+        </ul>
+      </div>
+      <div class="col-auto float-end ms-auto"></div>
+    </div>
+  </div>
+  <!-- /Page Header -->
+
+  <!-- Search Filter -->
+  <div class="row filter-row">
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+      <div class="form-group form-focus">
+        <input type="text" class="form-control floating" (input)="searchID($event.target.value)" (focusout) = "rerender()">
+        <label class="focus-label">Product ID</label>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+      <div class="form-group form-focus">
+        <input type="text" class="form-control floating" (input)="searchName($event.target.value)" (focusout) = "rerender()">
+        <label class="focus-label">Product Name</label>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12"></div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+        <a class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#add_product"><i
+          class="fa fa-plus"></i> Add new product type</a>
+    </div>
+  </div>
+  <!-- /Search Filter -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id = "datatable" class="table table-striped custom-table mb-0 datatable">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Product Description</th>
+            <th>Created By</th>
+            <th>Date Created</th>
+            <th class="text-center">Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of types;let i = index">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.description}}</td>
+            <td>{{item.createdby}}</td>
+            <td>{{item.createdon}}</td>
+            <td class="text-center">
+              <div class="dropdown action-label">
+                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-dot-circle-o text-danger"></i> Pending
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item"> <i class="fa fa-dot-circle-o text-danger"></i>
+                    Pending</a>
+                  <a class="dropdown-item"> <i
+                    class="fa fa-dot-circle-o text-success"></i> Approved</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="types.length == 0">
+            <td colspan="61">
+              <h5 style="text-align: center;">No data found</h5>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
+
+<!-- Add New Product Type Modal -->
+<div id="add_product" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="border-bottom: 1px solid #dee2e6;">
+        <h5 class="modal-title">Add New Product Type</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addProduct()" [formGroup]="addProductForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Insurance Product Type Name</label>
+                <input class="form-control" type="text" [class.invalid]="addProductForm.get('name').invalid && addProductForm.get('name').touched"
+                       formControlName="name">
+                <div
+                  *ngIf="addProductForm.get('name').invalid && addProductForm.get('name').touched">
+                  <small
+                    *ngIf="addProductForm.get('name').invalid && addProductForm.get('name').touched"
+                    class="text-danger"> *Category Name is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Description</label>
+                <input class="form-control" type="text" [class.invalid]="addProductForm.get('description').invalid && addProductForm.get('description').touched"
+                       formControlName="description">
+                <div
+                  *ngIf="addProductForm.get('description').invalid && addProductForm.get('description').touched">
+                  <small
+                    *ngIf="addProductForm.get('description').invalid && addProductForm.get('description').touched"
+                    class="text-danger"> *Item name is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Add New Product Type Modal -->

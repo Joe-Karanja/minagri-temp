@@ -1,0 +1,237 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="page-title">Sales</h3>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/layout/dashboard/admin">Dashboard</a></li>
+          <li class="breadcrumb-item active">Sales</li>
+        </ul>
+      </div>
+      <div class="col-auto float-end ms-auto">
+        <a class="btn add-btn" data-bs-toggle="modal" data-bs-target="#create_project"><i class="fa fa-plus"></i>
+          Sell Product</a>
+        <div class="view-icons">
+          <a routerLink="/layout/projects/projectpage" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
+          <a routerLink="/layout/projects/projectlist" class="list-view btn btn-link active"><i
+            class="fa fa-bars"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Page Header -->
+
+  <!-- Search Filter -->
+  <div class="row filter-row">
+    <div class="col-sm-6 col-md-3">
+      <div class="form-group form-focus">
+        <input type="text" class="form-control floating" (input)="searchName($event.target.value)"
+               (focus)="rerender()">
+        <label class="focus-label"></label>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+    </div>
+    <div class="col-sm-6 col-md-3">
+
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <a class="btn btn-success w-100"> Search </a>
+    </div>
+  </div>
+  <!-- /Search Filter -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable"
+               class="table table-striped custom-table datatable">
+          <thead>
+          <tr>
+            <th>Farmer</th>
+            <th>Farm</th>
+            <th>Product</th>
+            <th>Cover value</th>
+            <th>Actual Pay</th>
+
+            <th class="text-end">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let sale of sales;let i = index">
+            <!--                            <td>-->
+            <!--                                <a routerLink="/layout/Sales/projectview/{{sale.id}}">{{sale.name}}</a>-->
+            <!--                            </td>-->
+            <td>{{sale.farmeruserid}}</td>
+            <td>
+              {{sale.farmid}}
+            </td>
+            <td>
+              {{sale.productid}}
+            </td>
+            <td>{{sale.covervalue}} </td>
+            <td>
+              {{sale.actualpay}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
+<!-- Create Project Modal -->
+<div id="create_project" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Make a Sale</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addSalesForm" (ngSubmit)="addSale()">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Farmer</label>
+                <select #farmeruseridAdd class="form-select form-control" formControl="farmeruserid" (change)="addSalesForm.controls['farmeruserid'].setValue(farmeruseridAdd.value)">
+                  <option *ngFor="let farmer of farmers" value="{{farmer.userid}}">{{farmer.accountname}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Farm</label>
+                <input type="text" formControlName="farmid" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Product</label>
+                <select #prodIdAdd class="form-select form-control" formControl="productid" (change)="addSalesForm.controls['productid'].setValue(prodIdAdd.value)">
+                  <option *ngFor="let product of products"  value="{{product.id}}">{{product.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>End Date</label>
+                <div class="cal-icon">
+                  <input class="form-control" type="number" formControlName="covervalue">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Actual Pay</label>
+                <input placeholder="" class="form-control" type="number" formControlName="actualpay">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary">submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Create Project Modal -->
+
+<!-- Edit Project Modal -->
+<div id="edit_project" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit a Sale</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editProjectForm">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Farmer</label>
+                <select class="form-select form-control" formControl="farmeruserid">
+                  <option>Global Technologies</option>
+                  <option>Delta Infotech</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Farm</label>
+                <input type="text" formControlName="farmid" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Product</label>
+                <select class="form-select form-control" formControl="productid">
+                  <option *ngFor="let product of products" [value]="product.id"> {{product.name}} </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>End Date</label>
+                <div class="cal-icon">
+                  <input class="form-control" type="number" formControlName="covervalue">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Actual Pay</label>
+                <input placeholder="$50" class="form-control" type="number" formControlName="actualpay">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Edit Project Modal -->
+
+<!-- Delete Project Modal -->
+<div class="modal custom-modal fade" id="delete_project" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-header">
+          <h3>Delete Project</h3>
+          <p>Are you sure want to delete?</p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <a class="btn btn-primary continue-btn"
+                 (click)="deleteProject()">Delete</a>
+            </div>
+            <div class="col-6">
+              <a data-bs-dismiss="modal"
+                 class="btn btn-primary cancel-btn">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Delete Project Modal -->

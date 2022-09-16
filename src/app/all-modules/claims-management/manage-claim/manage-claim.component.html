@@ -1,0 +1,107 @@
+<div>
+  <!-- Page Wrapper -->
+  <div class="page-wrapper">
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+      <!-- Page Header -->
+      <div class="page-header" style="margin-top: 10px">
+        <div class="row align-items-center">
+          <div class="col">
+            <h3 class="page-title">Manage Claims</h3>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/layout/dashboard/admin">Dashboard</a></li>
+              <li class="breadcrumb-item active">Claims</li>
+            </ul>
+          </div>
+<!--          <div class="col-auto float-end ms-auto">-->
+<!--            <a href="#" class="btn add-btn" style=" elevation: higher;color: #212529;border: 1px solid transparent;border-radius: .25rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;">-->
+<!--              <i class="fa fa-plus"></i> Add Commission</a>-->
+<!--          </div>-->
+        </div>
+      </div>
+      <!-- /Page Header -->
+
+      <!-- Search Filter -->
+      <div class="row filter-row">
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+          <div class="form-group form-focus">
+            <input type="text" class="form-control floating" (input)="searchName($event.target.value)" (focusout) = "rerender()">
+            <label class="focus-label">Farmer ID</label>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+          <div class="form-group form-focus">
+            <input type="text" class="form-control floating" (input)="searchName($event.target.value)" (focusout) = "rerender()">
+            <label class="focus-label">Farmer Name</label>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+<!--          <a  class="btn btn-success w-100"> Search </a>-->
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12"></div>
+      </div>
+      <!-- /Search Filter -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped custom-table mb-0">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Notification<br>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone<br>Number</th>
+                <th>Notification<br>Date</th>
+                <th>NIDA ID</th>
+                <th>Region</th>
+                <th>Farm<br>Size</th>
+                <th>UoM</th>
+                <th>Claim<br>Type</th>
+                <th class="text-end">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let claims of Claims;let i = index">
+                <td>
+                  <div class="status-toggle">
+                    <input type="checkbox" id="leave_module" class="check">
+                    <label for="leave_module" class="checktoggle">checkbox</label>
+                  </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <select class="form-select form-control" name="cars" id="cars" disabled="">
+                    <option value="Approve Claim">Approve Claim</option>
+                    <option value="Notify Client">Notify Client</option>
+                    <option value="Approve Payment">Approve Payment</option>
+                    <option value="Execute Payment">Execute Payment</option>
+                  </select>
+                </td>
+              </tr>
+              <tr *ngIf="Claims.length === 0">
+                <td colspan="12">
+                  <h5 style="text-align: center;">No data found</h5>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Page Content -->
+  </div>
+  <!-- /Page Wrapper -->
+</div>

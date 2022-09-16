@@ -1,0 +1,354 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="page-title">Farmers</h3>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/layout/dashboard/admin">Dashboard</a></li>
+          <li class="breadcrumb-item active">Farmers</li>
+        </ul>
+      </div>
+      <div class="col-auto float-end ms-auto">
+        <a class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_ticket"><i class="fa fa-plus"></i>
+          Add Farmer</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Filter -->
+  <div class="row filter-row">
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+      <div class="form-group form-focus">
+        <input type="text" class="form-control floating" (input)="searchName($event.target.value)">
+        <label class="focus-label">Farmer Name</label>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+      <a class="btn btn-success w-100"> Search </a>
+    </div>
+  </div>
+  <!-- /Search Filter -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+               class="table table-striped custom-table mb-0 datatable">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Account Name</th>
+            <th>Account Number</th>
+            <th>Branch</th>
+            <th>Nida Verification</th>
+            <th>RLMA Verification</th>
+            <th class="text-end">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let farmers of allTickets;let i = index">
+            <td>{{i + 1}}</td>
+            <td><a routerLink="/layout/tickets/ticketsview">{{farmers.userid}}</a></td>
+            <td>{{farmers.accountname}}</td>
+            <td>
+              <h2 class="table-avatar">
+                <a class="avatar avatar-xs" routerLink="/layout/employees/employeeprofile"><img alt=""
+                                                                                                src="assets/img/profiles/avatar-{{i+ 1}}.jpg"></a>
+                <a routerLink="/layout/employees/employeeprofile">{{farmers.userid}}</a>
+              </h2>
+            </td>
+            <td>{{farmers.branch}}</td>
+            <td>{{farmers.nidaverification}}</td>
+
+
+            <td class="text-end">
+              <div class="dropdown dropdown-action">
+                <a class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                   aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_ticket"
+                     (click)="edit(farmers.userid)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                  <a class="dropdown-item" data-bs-toggle="modal" (click)="tempId = farmers.userid"
+                     data-bs-target="#delete_ticket"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
+
+<!-- Add Ticket Modal -->
+<div id="add_ticket" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Farmer</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="addTickets()" [formGroup]="addFarmerForm">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Account Name</label>
+                <input class="form-control" type="text"
+                       formControlName="accountname">
+                <div
+                  *ngIf="addFarmerForm.get('accountname').invalid && addFarmerForm.get('accountname').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('accountname').invalid && addFarmerForm.get('accountname').touched"
+                    class="text-danger"> *Account number is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Account Number</label>
+                <input class="form-control" type="text"
+                       formControlName="accountnumber">
+                <div
+                  *ngIf="addFarmerForm.get('accountnumber').invalid && addFarmerForm.get('accountnumber').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('accountnumber').invalid && addFarmerForm.get('accountnumber').touched"
+                    class="text-danger"> *Account number is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input class="form-control" type="text"
+                       formControlName="bankname">
+                <div
+                  *ngIf="addFarmerForm.get('bankname').invalid && addFarmerForm.get('bankname').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('bankname').invalid && addFarmerForm.get('bankname').touched"
+                    class="text-danger"> *Bankname is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Field Agent Id</label>
+                <input class="form-control" type="text"
+                       formControlName="fieldagentid">
+                <div
+                  *ngIf="addFarmerForm.get('fieldagentid').invalid && addFarmerForm.get('fieldagentid').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('fieldagentid').invalid && addFarmerForm.get('fieldagentid').touched"
+                    class="text-danger"> *Field agent ID is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Branch</label>
+                <input class="form-control" type="text"
+                       formControlName="branch">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Location</label>
+                <input class="form-control" type="text"
+                       formControlName="locationid">
+                <div *ngIf="addFarmerForm.get('locationid').invalid && addFarmerForm.get('locationid').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('locationid').invalid && addFarmerForm.get('locationid').touched"
+                    class="text-danger"> *Location is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Marital Status</label>
+                <input type="text" class="form-control"
+                       [class.invalid]="addFarmerForm.get('maritalstatus').invalid && addFarmerForm.get('maritalstatus').touched"
+                       formControlName="maritalstatus">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>User</label>
+                <select class="form-select floating form-control" formControlName="userid">
+                  <option *ngFor="let user of users" [value]="user.userid">{{user.name}}</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Add Ticket Modal -->
+
+<!-- Edit Ticket Modal -->
+<div id="edit_ticket" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Farmer</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="editTicket()" [formGroup]="editTicketForm">
+          <<div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Account Name</label>
+              <input class="form-control" type="text"
+                     formControlName="accountname">
+              <div
+                *ngIf="addFarmerForm.get('accountname').invalid && addFarmerForm.get('accountname').touched">
+                <small
+                  *ngIf="addFarmerForm.get('accountname').invalid && addFarmerForm.get('accountname').touched"
+                  class="text-danger"> *Account number is required</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Account Number</label>
+              <input class="form-control" type="text"
+                     formControlName="accountnumber">
+              <div
+                *ngIf="addFarmerForm.get('accountnumber').invalid && addFarmerForm.get('accountnumber').touched">
+                <small
+                  *ngIf="addFarmerForm.get('accountnumber').invalid && addFarmerForm.get('accountnumber').touched"
+                  class="text-danger"> *Account number is required</small>
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input class="form-control" type="text"
+                       formControlName="bankname">
+                <div
+                  *ngIf="addFarmerForm.get('bankname').invalid && addFarmerForm.get('bankname').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('bankname').invalid && addFarmerForm.get('bankname').touched"
+                    class="text-danger"> *Bankname is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Field Agent Id</label>
+                <input class="form-control" type="text"
+                       formControlName="fieldagentid">
+                <div
+                  *ngIf="addFarmerForm.get('fieldagentid').invalid && addFarmerForm.get('fieldagentid').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('fieldagentid').invalid && addFarmerForm.get('fieldagentid').touched"
+                    class="text-danger"> *Field agent ID is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Branch</label>
+                <input class="form-control" type="text"
+                       formControlName="branch">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Location</label>
+                <input class="form-control" type="text"
+                       formControlName="locationid">
+                <div *ngIf="addFarmerForm.get('locationid').invalid && addFarmerForm.get('locationid').touched">
+                  <small
+                    *ngIf="addFarmerForm.get('locationid').invalid && addFarmerForm.get('locationid').touched"
+                    class="text-danger"> *Location is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Marital Status</label>
+                <input type="text" class="form-control"
+                       [class.invalid]="addFarmerForm.get('maritalstatus').invalid && addFarmerForm.get('maritalstatus').touched"
+                       formControlName="maritalstatus">
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Edit Ticket Modal -->
+
+<!-- Delete Ticket Modal -->
+<div class="modal custom-modal fade" id="delete_ticket" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-header">
+          <h3>Delete Ticket</h3>
+          <p>Are you sure want to delete?</p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <a class="btn btn-primary continue-btn"
+                 (click)="deleteTicket()">Delete</a>
+            </div>
+            <div class=" col-6">
+              <a data-bs-dismiss="modal"
+                 class="btn btn-primary cancel-btn">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Delete Ticket Modal -->

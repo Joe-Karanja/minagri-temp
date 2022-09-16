@@ -1,0 +1,404 @@
+<!-- Page Content -->
+<div class="content container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="page-title">Organizations</h3>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/layout/dashboard/admin">Dashboard</a></li>
+          <li class="breadcrumb-item active">Organization</li>
+        </ul>
+      </div>
+      <div class="col-auto float-end ms-auto">
+        <a class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_asset"><i class="fa fa-plus"></i>
+          Add Organization</a>
+      </div>
+    </div>
+  </div>
+  <!-- /Page Header -->
+
+  <!-- Search Filter -->
+  <div class="row filter-row">
+    <div class="col-sm-6 col-md-3">
+      <div class="form-group form-focus">
+        <input type="text" class="form-control floating" (input)="searchName($event.target.value)"
+               (focusout)="rerender()"/>
+        <label class="focus-label">Employee Name</label>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+    </div>
+    <div class="col-sm-12 col-md-4">
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
+          <div class="form-group form-focus">
+
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-2">
+      <a class="btn btn-success w-100"> Search </a>
+    </div>
+  </div>
+  <!-- /Search Filter -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable"
+               class="table table-striped custom-table mb-0 datatable">
+          <thead>
+          <tr>
+            <td>Id</td>
+            <th>Name</th>
+            <th>Organization ID</th>
+            <th>Contact Person</th>
+            <th>Location</th>
+            <th>Phone</th>
+            <th>website</th>
+            <th>Organization type</th>
+            <th>License Number</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+
+          </thead>
+          <tbody>
+          <tr *ngFor="let organization of allAssets;let i = index">
+            <td>
+              <a href="javascript:" class="avatar">{{organization.id}}</a>
+              <h2><a href="javascript:">{{organization.name}}</a></h2>
+            </td>
+            <td>{{organization.name}}</td>
+            <td>{{organization.registrationnumber}}</td>
+            <td>{{organization.contactuserid}}</td>
+            <td>{{organization.locationid}}</td>
+            <td>{{organization.phonenumber}}</td>
+            <td>{{organization.orgtype}}</td>
+            <td>{{organization.licensenumber}}</td>
+            <td class="text-center">
+              <div class="dropdown action-label">
+                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-dot-circle-o text-danger"></i>
+                  <!--                  //todo-->
+                  Active
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" (click)="getStatus('Pending')"><i
+                    class="fa fa-dot-circle-o text-danger"></i>
+                    Pending</a>
+                  <a class="dropdown-item" (click)="getStatus('Approved')"><i
+                    class="fa fa-dot-circle-o text-success"></i> Approved</a>
+                  <a class="dropdown-item" (click)="getStatus('Returned')"><i
+                    class="fa fa-dot-circle-o text-info"></i>
+                    Returned</a>
+                </div>
+              </div>
+            </td>
+            <td class="text-end">
+              <div class="dropdown dropdown-action">
+                <a class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                   aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_asset"
+                     (click)="edit(organization.registrationnumber)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                  <a class="dropdown-item" data-bs-toggle="modal"
+                     data-bs-target="#delete_asset" (click)="tempId = organization.registrationnumber"><i
+                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="allAssets.length === 0">
+            <td colspan="10">
+              <h5 style="text-align: center;">No data found</h5>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
+
+<!-- Add Asset Modal -->
+<div id="add_asset" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create organization</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addAssetsSubmit()" [formGroup]="addOrganization">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Asset Name</label>
+                <input class="form-control" type="text"
+                       [class.invalid]="addOrganization.get('name').invalid && addOrganization.get('name').touched"
+                       formControlName="name">
+
+                <div *ngIf="addOrganization.get('name').invalid && addOrganization.get('name').touched">
+                  <small
+                    *ngIf="addOrganization.get('name').invalid && addOrganization.get('name').touched"
+                    class="text-danger"> *Organization name is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Registration Number</label>
+                <input class="form-control" type="text"
+                       [class.invalid]="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched"
+                       formControlName="registrationnumber">
+              </div>
+              <div
+                *ngIf="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched">
+                <small
+                  *ngIf="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched"
+                  class="text-danger"> *Registration number is required</small>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>License Number</label>
+                  <input class="form-control" type="text" formControlName="licensenumber">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Website</label>
+                  <input class="form-control" type="text" formControlName="website">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Organization type</label>
+                  <select class="form-select form-control"
+                  [class.invalid]="addOrganization.get('orgtype').invalid && addOrganization.get('orgtype').touched"
+                  formControlName="orgtype">
+                  <option *ngFor="let type of organizationType" [value]="type.id">{{type.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Phone number</label>
+                  <input class="form-control" type="text" formControlName="phonenumber">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Contact user</label>
+                <select class="form-select form-control"
+                        [class.invalid]="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched"
+                        formControlName="contactuserid"
+                >
+                  <option *ngFor="let user of users" [value]="user.userid">{{user.name}}</option>
+                </select>
+                <div
+                  *ngIf="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched">
+                  <small
+                    *ngIf="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched"
+                    class="text-danger"> *Contact user is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" type="text" formControlName="email">
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Add Asset Modal -->
+
+<!-- Edit Asset Modal -->
+<div id="edit_asset" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Asset</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="editAssetSubmit()" [formGroup]="editOrganization">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Asset Name</label>
+                <input class="form-control" type="text"
+                       [class.invalid]="addOrganization.get('name').invalid && addOrganization.get('name').touched"
+                       formControlName="name">
+
+                <div *ngIf="addOrganization.get('name').invalid && addOrganization.get('name').touched">
+                  <small
+                    *ngIf="addOrganization.get('name').invalid && addOrganization.get('name').touched"
+                    class="text-danger"> *Organization name is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Registration Number</label>
+                <input class="form-control" type="text"
+                       [class.invalid]="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched"
+                       formControlName="registrationnumber">
+              </div>
+              <div
+                *ngIf="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched">
+                <small
+                  *ngIf="addOrganization.get('registrationnumber').invalid && addOrganization.get('registrationnumber').touched"
+                  class="text-danger"> *Registration number is required</small>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>License Number</label>
+                  <input class="form-control" type="text" formControlName="licensenumber">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Website</label>
+                  <input class="form-control" type="text" formControlName="website">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Organization type</label>
+                  <select class="form-select form-control"
+                          [class.invalid]="addOrganization.get('orgtype').invalid && addOrganization.get('orgtype').touched"
+                          formControlName="orgtype">
+                    <option *ngFor="let type of organizationType" [value]="type.id">{{type.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Phone number</label>
+                  <input class="form-control" type="text" formControlName="phonenumber">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Contact user</label>
+                <select class="form-select form-control"
+                        [class.invalid]="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched"
+                        formControlName="contactuserid">
+                  <option *ngFor="let user of users" [value]="user.userid">{{user.name}}</option>
+                </select>
+                <div
+                  *ngIf="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched">
+                  <small
+                    *ngIf="addOrganization.get('contactuserid').invalid && addOrganization.get('contactuserid').touched"
+                    class="text-danger"> *Contact user is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" type="text" formControlName="email">
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Edit Asset Modal -->
+
+<!-- Delete Asset Modal -->
+<div class="modal custom-modal fade" id="delete_asset" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-header">
+          <h3>Delete Asset</h3>
+          <p>Are you sure want to delete?</p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <a class="btn btn-primary continue-btn"
+                 (click)="deleteAssets()">Delete</a>
+            </div>
+            <div class="col-6">
+              <a data-bs-dismiss="modal"
+                 class="btn btn-primary cancel-btn">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--================================== user table =======================================================-->
+
+<!--<div id="org-users" class="modal custom-modal fade" role="dialog">-->
+<!--  <div class="modal-dialog modal-md" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">Edit Asset</h5>-->
+<!--        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <table>-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--            <th>User Id</th>-->
+<!--            <th>User Name</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--          <tr *ngFor="let user of users" (click)="user = setUser(user)">-->
+<!--            <td>{{user?.userid}}</td>-->
+<!--            <td>{{user?.name}}</td>-->
+<!--          </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+
